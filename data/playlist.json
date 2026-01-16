@@ -60,7 +60,7 @@
       "added_at": "2026-01-16T11:18:42.359933",
       "order": 1,
       "played": true,
-      "play_count": 6
+      "play_count": 7
     },
     {
       "id": "6b35b55290c9",
@@ -91,7 +91,7 @@
       "added_at": "2026-01-16T11:35:54.035353",
       "order": 2,
       "played": true,
-      "play_count": 5
+      "play_count": 6
     },
     {
       "id": "2f839bc9dc44",
@@ -125,11 +125,11 @@
       "play_count": 3
     }
   ],
-  "current_index": 0,
+  "current_index": 2,
   "playback_mode": "normal",
   "shuffle_order": [
     0,
     1
   ],
-  "updated_at": "2026-01-16T11:51:27.442579"
+  "updated_at": "2026-01-16T12:00:54.600586"
 }

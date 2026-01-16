@@ -25,6 +25,11 @@ Un reproductor de música moderno basado en web, construido con **Flask**, que p
   - Temas visuales.
   - Gestión de caché.
 
+## 📱 Demo
+Para probar el demo, puedes visitar el siguiente enlace: [Demo](https://flask-audio-player-lrrq.onrender.com)
+
+
+
 ## 🚀 Instalación y Configuración
 
 ### Prerrequisitos
@@ -40,7 +45,7 @@ Un reproductor de música moderno basado en web, construido con **Flask**, que p
 1.  **Clonar el repositorio**
 
     ```bash
-    git clone https://github.com/tu-usuario/flask_audio_player.git
+    git clone https://github.com/Marbinseca/flask_audio_player.git
     cd flask_audio_player
     ```
 

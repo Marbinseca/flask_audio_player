@@ -15,6 +15,10 @@ from playlist_manager import Playlist, Track
 from audio_processor import AudioProcessor
 
 # Configurar logging
+# Ensure logs and data directories exist
+for dir_path in ['logs', 'data', 'audio_cache']:
+    Path(dir_path).mkdir(parents=True, exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
