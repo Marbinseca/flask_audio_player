@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}Audio Flask Player - Reproductor Web{% endblock %}
+    </title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome CDN for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='icons/favicon.ico') }}"
+    />
+
+    <!-- Custom CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/custom.css') }}"
+    />
+
+    <!-- Metadata -->
+    <meta
+      name="description"
+      content="Reproductor web de audio desde múltiples plataformas - YouTube, Vimeo, Facebook, SoundCloud"
+    />
+    <meta
+      name="keywords"
+      content="audio, reproductor, música, YouTube, Vimeo, streaming"
+    />
+    <meta name="author" content="Audio Flask Player" />
+
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body
+    class="h-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 font-sans antialiased"
+  >
+    <!-- Background Pattern -->
+    <div
+      class="fixed inset-0 bg-noise-pattern opacity-5 pointer-events-none"
+    ></div>
+
+    <!-- Main Container -->
+    <div class="relative min-h-screen flex flex-col">
+      <!-- Header/Navigation -->
+      <header
+        class="bg-gray-900 bg-opacity-80 backdrop-blur-lg border-b border-gray-800 sticky top-0 z-40"
+      >
+        <div class="container mx-auto px-4 py-3">
+          <div class="flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+              <div class="relative">
+                <div
+                  class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center"
+                >
+                  <i class="fas fa-music text-white text-lg"></i>
+                  <div
+                    class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-gray-900"
+                  ></div>
+                </div>
+              </div>
+              <div>
+                <h1
+                  class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
+                >
+                  Audio Flask Player
+                </h1>
+                <p class="text-xs text-gray-400">
+                  Streaming desde múltiples plataformas
+                </p>
+              </div>
+            </div>
+
+            <!-- Connection Status & Controls -->
+            <div class="flex items-center space-x-4">
+              <!-- Connection Status -->
+              <div
+                class="hidden md:flex items-center space-x-2 px-3 py-1.5 bg-gray-800 rounded-full"
+              >
+                <div
+                  class="w-2 h-2 bg-green-500 rounded-full animate-pulse"
+                ></div>
+                <span class="text-sm text-gray-300">Conectado</span>
+              </div>
+
+              <!-- Settings Button -->
+              <button
+                id="settingsBtn"
+                class="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200"
+              >
+                <i class="fas fa-cog text-lg"></i>
+              </button>
+
+              <!-- User Menu -->
+              <div class="relative">
+                <button
+                  id="userMenuBtn"
+                  class="flex items-center space-x-2 p-1.5 text-gray-300 hover:bg-gray-800 rounded-lg transition-colors duration-200"
+                >
+                  <div
+                    class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center"
+                  >
+                    <i class="fas fa-user text-sm"></i>
+                  </div>
+                  <span class="hidden md:inline text-sm">Usuario</span>
+                  <i class="fas fa-chevron-down text-xs"></i>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div
+                  id="userDropdown"
+                  class="hidden absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-1 z-50"
+                >
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 transition-colors duration-150"
+                  >
+                    <i class="fas fa-user mr-2"></i>Perfil
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 transition-colors duration-150"
+                  >
+                    <i class="fas fa-heart mr-2"></i>Favoritos
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 transition-colors duration-150"
+                  >
+                    <i class="fas fa-history mr-2"></i>Historial
+                  </a>
+                  <div class="border-t border-gray-700 my-1"></div>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 transition-colors duration-150"
+                  >
+                    <i class="fas fa-cog mr-2"></i>Configuración
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-red-400 hover:bg-gray-700 transition-colors duration-150"
+                  >
+                    <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="flex-grow container mx-auto px-4 py-6">
+        {% block content %}
+        <!-- Content will be inserted here by child templates -->
+        {% endblock %}
+      </main>
+
+      <!-- Global Player Controls Removed by user request -->
+
+      <!-- Toast Notification Container -->
+      <div
+        id="toastContainer"
+        class="fixed bottom-20 right-4 space-y-3 z-50"
+      ></div>
+
+      <!-- Loading Overlay -->
+      <div
+        id="loadingOverlay"
+        class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50"
+      >
+        <div class="text-center">
+          <div
+            class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+          ></div>
+          <p class="text-gray-300">Cargando...</p>
+        </div>
+      </div>
+
+      <!-- Error Modal Container -->
+      <div id="errorModalContainer"></div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <!-- ui.js removed as it conflicts with index.html logic -->
+    <script src="{{ url_for('static', filename='js/player.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/playlist.js') }}"></script>
+
+    <!-- Initialize App -->
+    <script>
+      // Set CSRF token for AJAX requests
+      const CSRF_TOKEN = "{{ csrf_token() if csrf_token else '' }}";
+
+      // App configuration
+      const APP_CONFIG = {
+        apiBaseUrl: "{{ url_for('index') }}",
+        endpoints: {
+          playlist: "{{ url_for('get_playlist') }}",
+          addToPlaylist: "{{ url_for('add_to_playlist') }}",
+          streamAudio: "{{ url_for('stream_audio', track_id='') }}",
+          currentTrack: "{{ url_for('current_track') }}",
+          nextTrack: "{{ url_for('next_track') }}",
+          previousTrack: "{{ url_for('previous_track') }}",
+          settings: "{{ url_for('settings') }}",
+        },
+        defaultThumbnail:
+          "{{ url_for('static', filename='icons/default-album.png') }}",
+      };
+
+      // Global state
+      window.AppState = {
+        currentTrack: null,
+        playlist: [],
+        isPlaying: false,
+        volume: 0.8,
+        shuffle: false,
+        repeat: false,
+        settings: {
+          quality: "192",
+          theme: "dark",
+          autoplay: true,
+        },
+      };
+
+      // Initialize when DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize UI components
+        if (typeof initUI === "function") {
+          initUI();
+        }
+
+        // Initialize player
+        if (typeof initPlayer === "function") {
+          initPlayer();
+        }
+
+        // Initialize playlist
+        if (typeof initPlaylist === "function") {
+          initPlaylist();
+        }
+
+        // Load settings
+        loadSettings();
+
+        // Show global player if there are tracks
+        updateGlobalPlayer();
+      });
+
+      // Utility functions
+      function showLoading() {
+        document.getElementById("loadingOverlay").classList.remove("hidden");
+      }
+
+      function hideLoading() {
+        document.getElementById("loadingOverlay").classList.add("hidden");
+      }
+
+      function showToast(message, type = "success") {
+        const toastContainer = document.getElementById("toastContainer");
+        const toastId = "toast-" + Date.now();
+
+        const icons = {
+          success: "fas fa-check-circle",
+          error: "fas fa-exclamation-circle",
+          warning: "fas fa-exclamation-triangle",
+          info: "fas fa-info-circle",
+        };
+
+        const colors = {
+          success: "text-green-500",
+          error: "text-red-500",
+          warning: "text-yellow-500",
+          info: "text-blue-500",
+        };
+
+        const toast = document.createElement("div");
+        toast.id = toastId;
+        toast.className = `bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-4 w-80 transform transition-all duration-300 translate-x-full`;
+        toast.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i class="${icons[type]} ${colors[type]} text-lg"></i>
+                    <div class="flex-grow">
+                        <p class="text-sm text-gray-300">${message}</p>
+                    </div>
+                    <button onclick="closeToast('${toastId}')" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+
+        toastContainer.appendChild(toast);
+
+        // Animate in
+        setTimeout(() => {
+          toast.classList.remove("translate-x-full");
+        }, 10);
+
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+          closeToast(toastId);
+        }, 5000);
+      }
+
+      function closeToast(toastId) {
+        const toast = document.getElementById(toastId);
+        if (toast) {
+          toast.classList.add("translate-x-full");
+          setTimeout(() => {
+            if (toast.parentNode) {
+              toast.parentNode.removeChild(toast);
+            }
+          }, 300);
+        }
+      }
+
+      function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes}:${secs.toString().padStart(2, "0")}`;
+      }
+
+      function loadSettings() {
+        fetch(APP_CONFIG.endpoints.settings)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              window.AppState.settings = data.settings;
+              applyTheme(window.AppState.settings.theme);
+            }
+          })
+          .catch((error) => {
+            console.error("Error loading settings:", error);
+          });
+      }
+
+      function applyTheme(theme) {
+        if (theme === "dark") {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      }
+
+      function updateGlobalPlayer() {
+        // Disabled by user request
+      }
+
+      // CSRF protection for AJAX requests
+      function getCSRFToken() {
+        const token = document.querySelector('meta[name="csrf-token"]');
+        return token ? token.getAttribute("content") : "";
+      }
+
+      // Enhanced fetch with error handling
+      async function apiFetch(url, options = {}) {
+        const defaultOptions = {
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken(),
+          },
+        };
+
+        const mergedOptions = { ...defaultOptions, ...options };
+
+        try {
+          showLoading();
+          const response = await fetch(url, mergedOptions);
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          return await response.json();
+        } catch (error) {
+          console.error("API Fetch error:", error);
+          showToast("Error de conexión con el servidor", "error");
+          throw error;
+        } finally {
+          hideLoading();
+        }
+      }
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+  </body>
+</html>

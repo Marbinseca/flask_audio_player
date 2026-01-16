@@ -1,0 +1,865 @@
+<!-- Player Controls Component -->
+<div class="player-controls">
+    <!-- Main Player Controls -->
+    <div class="flex flex-col items-center space-y-4">
+        <!-- Progress Bar -->
+        <div class="w-full">
+            <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+                <span id="playerCurrentTime">0:00</span>
+                <span id="playerDuration">0:00</span>
+            </div>
+            <div class="relative h-1.5 bg-gray-800 rounded-full overflow-hidden cursor-pointer" id="playerProgressContainer">
+                <div id="playerProgressBackground" class="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" style="background-size: 200% 100%; animation: wave 3s linear infinite;"></div>
+                <div id="playerProgressBar" class="absolute h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+                <div id="playerProgressHandle" class="absolute w-4 h-4 bg-white rounded-full -top-1.5 -ml-2 cursor-grab active:cursor-grabbing shadow-lg transition-all duration-150 hover:scale-110" style="left: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="flex items-center justify-center space-x-6">
+            <!-- Shuffle Button -->
+            <button id="playerShuffleBtn" class="p-2 text-gray-400 hover:text-blue-400 hover:bg-gray-800 rounded-full transition-all duration-200 relative group" title="Mezclar">
+                <i class="fas fa-random text-lg"></i>
+                <div class="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 rounded-full text-xs flex items-center justify-center text-white transform scale-0 group-hover:scale-100 transition-transform duration-200">
+                    <i class="fas fa-info"></i>
+                </div>
+            </button>
+
+            <!-- Previous Button -->
+            <button id="playerPrevBtn" class="p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-full transition-all duration-200" title="Anterior">
+                <i class="fas fa-step-backward text-xl"></i>
+            </button>
+
+            <!-- Play/Pause Button -->
+            <button id="playerPlayPauseBtn" class="w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-full flex items-center justify-center text-white transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:scale-105 active:scale-95" title="Reproducir/Pausar">
+                <i id="playerPlayPauseIcon" class="fas fa-play text-xl"></i>
+            </button>
+
+            <!-- Next Button -->
+            <button id="playerNextBtn" class="p-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-full transition-all duration-200" title="Siguiente">
+                <i class="fas fa-step-forward text-xl"></i>
+            </button>
+
+            <!-- Repeat Button -->
+            <button id="playerRepeatBtn" class="p-2 text-gray-400 hover:text-purple-400 hover:bg-gray-800 rounded-full transition-all duration-200 relative group" title="Repetir">
+                <i class="fas fa-redo text-lg"></i>
+                <div class="absolute -top-1 -right-1 w-5 h-5 bg-purple-500 rounded-full text-xs flex items-center justify-center text-white transform scale-0 group-hover:scale-100 transition-transform duration-200">
+                    <i class="fas fa-info"></i>
+                </div>
+            </button>
+        </div>
+
+        <!-- Secondary Controls -->
+        <div class="flex items-center justify-between w-full">
+            <!-- Volume Control -->
+            <div class="flex items-center space-x-3">
+                <button id="playerVolumeBtn" class="text-gray-400 hover:text-white transition-colors duration-200" title="Volumen">
+                    <i class="fas fa-volume-up text-lg"></i>
+                </button>
+                <div class="w-32 relative group">
+                    <div class="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                        <div id="playerVolumeBar" class="h-full bg-gradient-to-r from-blue-400 to-blue-300 rounded-full transition-all duration-300" style="width: 80%"></div>
+                    </div>
+                    <div id="playerVolumeHandle" class="absolute w-3 h-3 bg-white rounded-full -top-1 -ml-1.5 cursor-pointer shadow transition-all duration-150 hover:scale-125" style="left: 80%"></div>
+                </div>
+                <span id="playerVolumePercent" class="text-xs text-gray-400 w-8">80%</span>
+            </div>
+
+            <!-- Quality & Speed -->
+            <div class="flex items-center space-x-3">
+                <!-- Playback Speed -->
+                <div class="relative group">
+                    <button id="playerSpeedBtn" class="px-2 py-1 bg-gray-800 hover:bg-gray-700 rounded text-xs text-gray-300 hover:text-white transition-colors duration-200">
+                        1.0x
+                    </button>
+                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-24 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-1 z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <button data-speed="0.5" class="speed-option block w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-700">0.5x</button>
+                        <button data-speed="0.75" class="speed-option block w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-700">0.75x</button>
+                        <button data-speed="1.0" class="speed-option block w-full px-3 py-1.5 text-xs text-blue-400 hover:bg-gray-700">1.0x</button>
+                        <button data-speed="1.25" class="speed-option block w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-700">1.25x</button>
+                        <button data-speed="1.5" class="speed-option block w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-700">1.5x</button>
+                        <button data-speed="2.0" class="speed-option block w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-700">2.0x</button>
+                    </div>
+                </div>
+
+                <!-- Quality Selector -->
+                <div class="relative group">
+                    <button id="playerQualityBtn" class="px-2 py-1 bg-gray-800 hover:bg-gray-700 rounded text-xs text-green-400 hover:text-white transition-colors duration-200">
+                        192k
+                    </button>
+                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-20 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-1 z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <button data-quality="128" class="quality-option block w-full px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-700">128k</button>
+                        <button data-quality="192" class="quality-option block w-full px-3 py-1.5 text-xs text-blue-400 hover:bg-gray-700">192k</button>
+                        <button data-quality="320" class="quality-option block w-full px-3 py-1.5 text-xs text-green-400 hover:bg-gray-700">320k</button>
+                        <button data-quality="flac" class="quality-option block w-full px-3 py-1.5 text-xs text-purple-400 hover:bg-gray-700">FLAC</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center justify-center space-x-4 pt-2">
+            <button id="playerDownloadBtn" class="p-2 text-gray-400 hover:text-blue-400 hover:bg-gray-800 rounded-lg transition-all duration-200 group relative" title="Descargar">
+                <i class="fas fa-download text-lg"></i>
+                <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    Descargar
+                </span>
+            </button>
+
+            <button id="playerFavoriteBtn" class="p-2 text-gray-400 hover:text-pink-400 hover:bg-gray-800 rounded-lg transition-all duration-200 group relative" title="Agregar a favoritos">
+                <i class="far fa-heart text-lg"></i>
+                <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    Favorito
+                </span>
+            </button>
+
+            <button id="playerShareBtn" class="p-2 text-gray-400 hover:text-green-400 hover:bg-gray-800 rounded-lg transition-all duration-200 group relative" title="Compartir">
+                <i class="fas fa-share-alt text-lg"></i>
+                <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    Compartir
+                </span>
+            </button>
+
+            <button id="playerQueueBtn" class="p-2 text-gray-400 hover:text-yellow-400 hover:bg-gray-800 rounded-lg transition-all duration-200 group relative" title="Ver cola">
+                <i class="fas fa-list-ol text-lg"></i>
+                <span id="playerQueueCount" class="absolute -top-2 -right-2 w-5 h-5 bg-blue-500 text-xs rounded-full flex items-center justify-center">0</span>
+                <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    Cola
+                </span>
+            </button>
+
+            <button id="playerLyricsBtn" class="p-2 text-gray-400 hover:text-purple-400 hover:bg-gray-800 rounded-lg transition-all duration-200 group relative" title="Letra">
+                <i class="fas fa-microphone text-lg"></i>
+                <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    Letra
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Visualizer (Optional) -->
+    <div id="playerVisualizer" class="hidden mt-6">
+        <div class="h-16 flex items-end justify-center space-x-1">
+            <!-- Bars will be generated dynamically -->
+        </div>
+    </div>
+
+    <!-- Waveform Display (Optional) -->
+    <div id="playerWaveform" class="hidden mt-4">
+        <div class="relative h-12 w-full bg-gray-800 rounded-lg overflow-hidden">
+            <canvas id="waveformCanvas" class="absolute inset-0"></canvas>
+            <div id="waveformProgress" class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <!-- Audio Element (Hidden) -->
+    <audio id="playerAudioElement" class="hidden" preload="metadata" crossorigin="anonymous">
+        Your browser does not support the audio element.
+    </audio>
+</div>
+
+<!-- Player Controls JavaScript -->
+<script>
+    class PlayerControls {
+        constructor() {
+            this.audioElement = document.getElementById('playerAudioElement');
+            this.isPlaying = false;
+            this.currentTime = 0;
+            this.duration = 0;
+            this.volume = 0.8;
+            this.shuffle = false;
+            this.repeat = false;
+            this.playbackRate = 1.0;
+            this.quality = '192';
+            this.currentTrack = null;
+            
+            this.init();
+        }
+        
+        init() {
+            this.setupAudioElement();
+            this.setupEventListeners();
+            this.updateVisualState();
+        }
+        
+        setupAudioElement() {
+            // Audio event listeners
+            this.audioElement.addEventListener('loadedmetadata', () => {
+                this.duration = this.audioElement.duration;
+                this.updateDurationDisplay();
+            });
+            
+            this.audioElement.addEventListener('timeupdate', () => {
+                this.currentTime = this.audioElement.currentTime;
+                this.updateProgress();
+            });
+            
+            this.audioElement.addEventListener('ended', () => {
+                this.handleTrackEnd();
+            });
+            
+            this.audioElement.addEventListener('volumechange', () => {
+                this.volume = this.audioElement.volume;
+                this.updateVolumeDisplay();
+            });
+            
+            this.audioElement.addEventListener('play', () => {
+                this.isPlaying = true;
+                this.updatePlayState();
+            });
+            
+            this.audioElement.addEventListener('pause', () => {
+                this.isPlaying = false;
+                this.updatePlayState();
+            });
+            
+            this.audioElement.addEventListener('error', (e) => {
+                console.error('Audio error:', e);
+                this.handleAudioError();
+            });
+        }
+        
+        setupEventListeners() {
+            // Play/Pause button
+            document.getElementById('playerPlayPauseBtn').addEventListener('click', () => {
+                this.togglePlayPause();
+            });
+            
+            // Previous button
+            document.getElementById('playerPrevBtn').addEventListener('click', () => {
+                this.playPrevious();
+            });
+            
+            // Next button
+            document.getElementById('playerNextBtn').addEventListener('click', () => {
+                this.playNext();
+            });
+            
+            // Shuffle button
+            document.getElementById('playerShuffleBtn').addEventListener('click', () => {
+                this.toggleShuffle();
+            });
+            
+            // Repeat button
+            document.getElementById('playerRepeatBtn').addEventListener('click', () => {
+                this.toggleRepeat();
+            });
+            
+            // Volume button
+            document.getElementById('playerVolumeBtn').addEventListener('click', () => {
+                this.toggleMute();
+            });
+            
+            // Progress bar interaction
+            const progressContainer = document.getElementById('playerProgressContainer');
+            const progressHandle = document.getElementById('playerProgressHandle');
+            
+            let isDraggingProgress = false;
+            
+            progressContainer.addEventListener('mousedown', (e) => this.startProgressDrag(e));
+            progressHandle.addEventListener('mousedown', (e) => this.startProgressDrag(e));
+            
+            // Volume bar interaction
+            const volumeBar = document.getElementById('playerVolumeBar');
+            const volumeHandle = document.getElementById('playerVolumeHandle');
+            
+            let isDraggingVolume = false;
+            
+            volumeBar.parentElement.addEventListener('mousedown', (e) => this.startVolumeDrag(e));
+            volumeHandle.addEventListener('mousedown', (e) => this.startVolumeDrag(e));
+            
+            // Speed options
+            document.querySelectorAll('.speed-option').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const speed = parseFloat(e.target.dataset.speed);
+                    this.setPlaybackSpeed(speed);
+                });
+            });
+            
+            // Quality options
+            document.querySelectorAll('.quality-option').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const quality = e.target.dataset.quality;
+                    this.setQuality(quality);
+                });
+            });
+            
+            // Action buttons
+            document.getElementById('playerDownloadBtn').addEventListener('click', () => this.downloadTrack());
+            document.getElementById('playerFavoriteBtn').addEventListener('click', () => this.toggleFavorite());
+            document.getElementById('playerShareBtn').addEventListener('click', () => this.shareTrack());
+            document.getElementById('playerQueueBtn').addEventListener('click', () => this.showQueue());
+            document.getElementById('playerLyricsBtn').addEventListener('click', () => this.showLyrics());
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
+        }
+        
+        // Player Methods
+        loadTrack(track) {
+            if (!track || !track.id) return;
+            
+            this.currentTrack = track;
+            this.audioElement.src = `${APP_CONFIG.endpoints.streamAudio}${track.id}`;
+            this.audioElement.load();
+            
+            this.updateTrackInfo(track);
+            this.updateQueueCount();
+            
+            if (window.AppState.settings.autoplay) {
+                this.play();
+            }
+        }
+        
+        play() {
+            this.audioElement.play().catch(error => {
+                console.error('Error playing audio:', error);
+                showToast('Error al reproducir el audio', 'error');
+            });
+        }
+        
+        pause() {
+            this.audioElement.pause();
+        }
+        
+        togglePlayPause() {
+            if (this.audioElement.paused) {
+                this.play();
+            } else {
+                this.pause();
+            }
+        }
+        
+        playPrevious() {
+            if (!this.currentTrack) return;
+            
+            fetch(APP_CONFIG.endpoints.previousTrack, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.track) {
+                    this.loadTrack(data.track);
+                    showToast('Canción anterior', 'info');
+                }
+            })
+            .catch(error => {
+                console.error('Error getting previous track:', error);
+                showToast('Error al cambiar de canción', 'error');
+            });
+        }
+        
+        playNext() {
+            if (!this.currentTrack) return;
+            
+            fetch(APP_CONFIG.endpoints.nextTrack, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.track) {
+                    this.loadTrack(data.track);
+                    showToast('Siguiente canción', 'info');
+                }
+            })
+            .catch(error => {
+                console.error('Error getting next track:', error);
+                showToast('Error al cambiar de canción', 'error');
+            });
+        }
+        
+        seekTo(time) {
+            if (!this.audioElement.duration) return;
+            
+            const validTime = Math.max(0, Math.min(time, this.audioElement.duration));
+            this.audioElement.currentTime = validTime;
+        }
+        
+        seekToPercentage(percentage) {
+            if (!this.audioElement.duration) return;
+            
+            const time = (percentage / 100) * this.audioElement.duration;
+            this.seekTo(time);
+        }
+        
+        setVolume(volume) {
+            const validVolume = Math.max(0, Math.min(volume, 1));
+            this.audioElement.volume = validVolume;
+        }
+        
+        setPlaybackSpeed(speed) {
+            const validSpeed = Math.max(0.5, Math.min(speed, 2.0));
+            this.playbackRate = validSpeed;
+            this.audioElement.playbackRate = validSpeed;
+            
+            document.getElementById('playerSpeedBtn').textContent = `${validSpeed.toFixed(1)}x`;
+            document.querySelectorAll('.speed-option').forEach(btn => {
+                btn.classList.remove('text-blue-400');
+                if (parseFloat(btn.dataset.speed) === validSpeed) {
+                    btn.classList.add('text-blue-400');
+                }
+            });
+            
+            showToast(`Velocidad: ${validSpeed.toFixed(1)}x`, 'info');
+        }
+        
+        setQuality(quality) {
+            this.quality = quality;
+            
+            document.getElementById('playerQualityBtn').textContent = `${quality}${quality === 'flac' ? '' : 'k'}`;
+            document.querySelectorAll('.quality-option').forEach(btn => {
+                btn.classList.remove('text-blue-400', 'text-green-400', 'text-purple-400');
+                if (btn.dataset.quality === quality) {
+                    if (quality === '192') btn.classList.add('text-blue-400');
+                    else if (quality === '320') btn.classList.add('text-green-400');
+                    else if (quality === 'flac') btn.classList.add('text-purple-400');
+                }
+            });
+            
+            showToast(`Calidad: ${quality}${quality === 'flac' ? ' (Lossless)' : 'kbps'}`, 'info');
+            
+            // Update settings
+            window.AppState.settings.quality = quality;
+        }
+        
+        toggleShuffle() {
+            this.shuffle = !this.shuffle;
+            const btn = document.getElementById('playerShuffleBtn');
+            
+            if (this.shuffle) {
+                btn.classList.remove('text-gray-400');
+                btn.classList.add('text-blue-400');
+                showToast('Mezcla activada', 'success');
+            } else {
+                btn.classList.remove('text-blue-400');
+                btn.classList.add('text-gray-400');
+                showToast('Mezcla desactivada', 'info');
+            }
+        }
+        
+        toggleRepeat() {
+            this.repeat = !this.repeat;
+            const btn = document.getElementById('playerRepeatBtn');
+            
+            if (this.repeat) {
+                btn.classList.remove('text-gray-400');
+                btn.classList.add('text-purple-400');
+                this.audioElement.loop = true;
+                showToast('Repetición activada', 'success');
+            } else {
+                btn.classList.remove('text-purple-400');
+                btn.classList.add('text-gray-400');
+                this.audioElement.loop = false;
+                showToast('Repetición desactivada', 'info');
+            }
+        }
+        
+        toggleMute() {
+            if (this.audioElement.volume > 0) {
+                this.previousVolume = this.audioElement.volume;
+                this.setVolume(0);
+                document.getElementById('playerVolumeBtn').innerHTML = '<i class="fas fa-volume-mute text-lg"></i>';
+                showToast('Silenciado', 'info');
+            } else {
+                this.setVolume(this.previousVolume || 0.8);
+                document.getElementById('playerVolumeBtn').innerHTML = '<i class="fas fa-volume-up text-lg"></i>';
+                showToast('Sonido restaurado', 'success');
+            }
+        }
+        
+        // UI Update Methods
+        updateTrackInfo(track) {
+            // This method should be implemented by the parent component
+            // It updates the track title, artist, album art, etc.
+            if (typeof window.updateTrackDisplay === 'function') {
+                window.updateTrackDisplay(track);
+            }
+        }
+        
+        updatePlayState() {
+            const icon = document.getElementById('playerPlayPauseIcon');
+            const btn = document.getElementById('playerPlayPauseBtn');
+            
+            if (this.isPlaying) {
+                icon.classList.remove('fa-play');
+                icon.classList.add('fa-pause');
+                btn.classList.add('shadow-2xl');
+                this.startVisualizer();
+            } else {
+                icon.classList.remove('fa-pause');
+                icon.classList.add('fa-play');
+                btn.classList.remove('shadow-2xl');
+                this.stopVisualizer();
+            }
+        }
+        
+        updateProgress() {
+            if (!this.duration) return;
+            
+            const percentage = (this.currentTime / this.duration) * 100;
+            document.getElementById('playerProgressBar').style.width = `${percentage}%`;
+            document.getElementById('playerProgressHandle').style.left = `${percentage}%`;
+            document.getElementById('playerCurrentTime').textContent = formatTime(this.currentTime);
+            
+            // Update waveform if visible
+            this.updateWaveformProgress(percentage);
+        }
+        
+        updateDurationDisplay() {
+            document.getElementById('playerDuration').textContent = formatTime(this.duration);
+        }
+        
+        updateVolumeDisplay() {
+            const percentage = this.volume * 100;
+            document.getElementById('playerVolumeBar').style.width = `${percentage}%`;
+            document.getElementById('playerVolumeHandle').style.left = `${percentage}%`;
+            document.getElementById('playerVolumePercent').textContent = `${Math.round(percentage)}%`;
+            
+            // Update volume icon
+            const volumeBtn = document.getElementById('playerVolumeBtn');
+            if (this.volume === 0) {
+                volumeBtn.innerHTML = '<i class="fas fa-volume-mute text-lg"></i>';
+            } else if (this.volume < 0.5) {
+                volumeBtn.innerHTML = '<i class="fas fa-volume-down text-lg"></i>';
+            } else {
+                volumeBtn.innerHTML = '<i class="fas fa-volume-up text-lg"></i>';
+            }
+        }
+        
+        updateQueueCount() {
+            const count = window.AppState.playlist ? window.AppState.playlist.length : 0;
+            document.getElementById('playerQueueCount').textContent = count;
+        }
+        
+        updateVisualState() {
+            // Update all visual states based on current settings
+            document.getElementById('playerShuffleBtn').classList.toggle('text-blue-400', this.shuffle);
+            document.getElementById('playerRepeatBtn').classList.toggle('text-purple-400', this.repeat);
+            
+            // Update quality button
+            document.getElementById('playerQualityBtn').textContent = 
+                `${this.quality}${this.quality === 'flac' ? '' : 'k'}`;
+            
+            // Update speed button
+            document.getElementById('playerSpeedBtn').textContent = `${this.playbackRate.toFixed(1)}x`;
+        }
+        
+        // Drag Handling
+        startProgressDrag(e) {
+            e.preventDefault();
+            this.isDraggingProgress = true;
+            document.addEventListener('mousemove', this.dragProgress.bind(this));
+            document.addEventListener('mouseup', this.stopProgressDrag.bind(this));
+            this.dragProgress(e);
+        }
+        
+        dragProgress(e) {
+            if (!this.isDraggingProgress) return;
+            
+            const progressContainer = document.getElementById('playerProgressContainer');
+            const rect = progressContainer.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            x = Math.max(0, Math.min(x, rect.width));
+            const percentage = (x / rect.width) * 100;
+            
+            document.getElementById('playerProgressBar').style.width = `${percentage}%`;
+            document.getElementById('playerProgressHandle').style.left = `${percentage}%`;
+            
+            // Update time display during drag
+            if (this.duration) {
+                const time = (percentage / 100) * this.duration;
+                document.getElementById('playerCurrentTime').textContent = formatTime(time);
+            }
+        }
+        
+        stopProgressDrag(e) {
+            if (!this.isDraggingProgress) return;
+            
+            this.isDraggingProgress = false;
+            document.removeEventListener('mousemove', this.dragProgress.bind(this));
+            document.removeEventListener('mouseup', this.stopProgressDrag.bind(this));
+            
+            // Apply seek
+            const progressContainer = document.getElementById('playerProgressContainer');
+            const rect = progressContainer.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            x = Math.max(0, Math.min(x, rect.width));
+            const percentage = (x / rect.width) * 100;
+            
+            this.seekToPercentage(percentage);
+        }
+        
+        startVolumeDrag(e) {
+            e.preventDefault();
+            this.isDraggingVolume = true;
+            document.addEventListener('mousemove', this.dragVolume.bind(this));
+            document.addEventListener('mouseup', this.stopVolumeDrag.bind(this));
+            this.dragVolume(e);
+        }
+        
+        dragVolume(e) {
+            if (!this.isDraggingVolume) return;
+            
+            const volumeContainer = document.getElementById('playerVolumeBar').parentElement;
+            const rect = volumeContainer.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            x = Math.max(0, Math.min(x, rect.width));
+            const percentage = (x / rect.width) * 100;
+            
+            this.setVolume(percentage / 100);
+        }
+        
+        stopVolumeDrag() {
+            this.isDraggingVolume = false;
+            document.removeEventListener('mousemove', this.dragVolume.bind(this));
+            document.removeEventListener('mouseup', this.stopVolumeDrag.bind(this));
+        }
+        
+        // Visual Effects
+        startVisualizer() {
+            const visualizer = document.getElementById('playerVisualizer');
+            visualizer.classList.remove('hidden');
+            
+            // Create bars
+            const barsContainer = visualizer.querySelector('.flex');
+            barsContainer.innerHTML = '';
+            
+            for (let i = 0; i < 32; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'w-1 bg-gradient-to-t from-blue-400 to-purple-500 rounded-full';
+                bar.style.height = `${Math.random() * 100}%`;
+                bar.style.animation = `visualizer ${0.5 + Math.random()}s ease-in-out infinite alternate`;
+                bar.style.animationDelay = `${i * 0.05}s`;
+                barsContainer.appendChild(bar);
+            }
+            
+            // Add CSS for animation if not already present
+            if (!document.getElementById('visualizerAnimation')) {
+                const style = document.createElement('style');
+                style.id = 'visualizerAnimation';
+                style.textContent = `
+                    @keyframes visualizer {
+                        0% { height: 20%; }
+                        100% { height: 100%; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+        
+        stopVisualizer() {
+            const visualizer = document.getElementById('playerVisualizer');
+            visualizer.classList.add('hidden');
+        }
+        
+        updateWaveformProgress(percentage) {
+            const waveformProgress = document.getElementById('waveformProgress');
+            if (waveformProgress) {
+                waveformProgress.style.width = `${percentage}%`;
+            }
+        }
+        
+        // Action Methods
+        downloadTrack() {
+            if (!this.currentTrack) {
+                showToast('No hay canción para descargar', 'warning');
+                return;
+            }
+            
+            window.open(`${APP_CONFIG.endpoints.streamAudio}${this.currentTrack.id}?download=true`, '_blank');
+            showToast('Descargando canción...', 'info');
+        }
+        
+        toggleFavorite() {
+            if (!this.currentTrack) {
+                showToast('No hay canción para marcar como favorita', 'warning');
+                return;
+            }
+            
+            const btn = document.getElementById('playerFavoriteBtn');
+            const icon = btn.querySelector('i');
+            
+            if (icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                btn.classList.add('text-pink-400');
+                showToast('Agregado a favoritos', 'success');
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                btn.classList.remove('text-pink-400');
+                showToast('Removido de favoritos', 'info');
+            }
+        }
+        
+        shareTrack() {
+            if (!this.currentTrack) {
+                showToast('No hay canción para compartir', 'warning');
+                return;
+            }
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: this.currentTrack.title,
+                    text: `Escucha "${this.currentTrack.title}" por ${this.currentTrack.artist}`,
+                    url: window.location.href
+                }).catch(error => {
+                    console.error('Error sharing:', error);
+                });
+            } else {
+                // Fallback: copy to clipboard
+                const shareText = `${this.currentTrack.title} - ${this.currentTrack.artist}\n${window.location.href}`;
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showToast('Enlace copiado al portapapeles', 'success');
+                });
+            }
+        }
+        
+        showQueue() {
+            // This would toggle a queue modal/sidebar
+            showToast('Mostrando cola de reproducción', 'info');
+        }
+        
+        showLyrics() {
+            if (!this.currentTrack) {
+                showToast('No hay canción para mostrar letra', 'warning');
+                return;
+            }
+            
+            // This would fetch and display lyrics
+            showToast('Buscando letra...', 'info');
+        }
+        
+        // Event Handlers
+        handleTrackEnd() {
+            if (this.repeat) {
+                this.audioElement.currentTime = 0;
+                this.play();
+            } else {
+                this.playNext();
+            }
+        }
+        
+        handleAudioError() {
+            showToast('Error al cargar el audio', 'error');
+            this.pause();
+        }
+        
+        handleKeyboardShortcuts(e) {
+            // Only handle if not in an input field
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            switch(e.key.toLowerCase()) {
+                case ' ':
+                case 'k':
+                    e.preventDefault();
+                    this.togglePlayPause();
+                    break;
+                case 'arrowleft':
+                case 'j':
+                    e.preventDefault();
+                    this.seekTo(this.currentTime - 10);
+                    break;
+                case 'arrowright':
+                case 'l':
+                    e.preventDefault();
+                    this.seekTo(this.currentTime + 10);
+                    break;
+                case 'arrowup':
+                    e.preventDefault();
+                    this.setVolume(Math.min(this.volume + 0.1, 1));
+                    break;
+                case 'arrowdown':
+                    e.preventDefault();
+                    this.setVolume(Math.max(this.volume - 0.1, 0));
+                    break;
+                case 'm':
+                    e.preventDefault();
+                    this.toggleMute();
+                    break;
+                case 's':
+                    e.preventDefault();
+                    this.toggleShuffle();
+                    break;
+                case 'r':
+                    e.preventDefault();
+                    this.toggleRepeat();
+                    break;
+                case 'f':
+                    e.preventDefault();
+                    this.toggleFavorite();
+                    break;
+                case 'd':
+                    e.preventDefault();
+                    this.downloadTrack();
+                    break;
+            }
+        }
+    }
+    
+    // Initialize player when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        window.player = new PlayerControls();
+    });
+</script>
+
+<!-- Styles for this component -->
+<style>
+    .player-controls {
+        @apply bg-gradient-to-b from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50;
+    }
+    
+    /* Custom scrollbar for dropdowns */
+    .player-controls .absolute.bottom-full {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    
+    .player-controls .absolute.bottom-full::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .player-controls .absolute.bottom-full::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 2px;
+    }
+    
+    .player-controls .absolute.bottom-full::-webkit-scrollbar-thumb {
+        background: rgba(59, 130, 246, 0.5);
+        border-radius: 2px;
+    }
+    
+    /* Wave animation for progress background */
+    @keyframes wave {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+    
+    /* Glow effect for play button */
+    #playerPlayPauseBtn {
+        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
+    }
+    
+    #playerPlayPauseBtn:hover {
+        box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.7);
+    }
+    
+    /* Tooltip styles */
+    .player-controls .relative > span {
+        pointer-events: none;
+        z-index: 100;
+    }
+    
+    /* Smooth transitions */
+    .player-controls * {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    /* Visualizer animation */
+    @keyframes visualizer {
+        0% { height: 20%; opacity: 0.7; }
+        100% { height: 100%; opacity: 1; }
+    }
+</style>
